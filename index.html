@@ -118,15 +118,7 @@ footer small{color:#CAA794}
 <h1>Reset &amp;<br>Recalibrate</h1>
 <span class="chip">Theme</span>
 <p class="theme">Rest is the Blueprint</p>
-<p class="lede"> An intentional space for career professionals
-  <br />
-  to pause, reflect and rebuild, 
-  <br />
-  with
-  <br />
-  Josephine Muoh.
-  <br />
-  Coming soon.</p>
+<p class="lede">An intentional space for career professionals to pause, reflect and rebuild, with Josephine Muoh. Coming soon.</p>
 <div class="actions"><a class="btn" href="#join">Be first to know</a><a class="btn alt" href="#journey">See how it works</a></div>
 </div>
 <div class="photo">
@@ -143,7 +135,7 @@ footer small{color:#CAA794}
 <h2>You look successful. Something still needs to change.</h2>
 <div>
 <p class="big">You perform, lead, earn and meet expectations. There is very little room to stop and ask how you are actually doing.</p>
-<p>A person can be successful and exhausted, financially disorganised, disconnected from themselves, neglecting relationships or unsure of what comes next. Reset &amp; Recalibrate is for that gap between external success and internal wellbeing.</p>
+<p>A person can be successful and exhausted, financially disorganised, disconnected from themselves, neglecting relationships or unsure what comes next. Reset &amp; Recalibrate is for that gap between external success and internal wellbeing.</p>
 <p>The message isn’t “stop working.” It’s: pause long enough to make sure the life you’re working so hard to build is the life you want.</p>
 </div></div></section>
 
@@ -194,14 +186,26 @@ footer small{color:#CAA794}
 </footer>
 
 <script>
-// Set this to the address that should receive waitlist sign-ups.
-var WAITLIST_EMAIL="";
-document.getElementById("f").addEventListener("submit",function(ev){
+// Paste your Formspree endpoint here, e.g. "https://formspree.io/f/abcdwxyz"
+var FORM_ENDPOINT="https://formspree.io/f/mkjjazyy";
+var form=document.getElementById("f"),msg=document.getElementById("msg");
+form.addEventListener("submit",function(ev){
   ev.preventDefault();
-  var v=document.getElementById("e").value,m=document.getElementById("msg");
-  if(!WAITLIST_EMAIL){m.textContent="Thank you. Sign-ups aren’t connected yet, so please check back soon.";return;}
-  location.href="mailto:"+WAITLIST_EMAIL+"?subject="+encodeURIComponent("Reset & Recalibrate waitlist")+"&body="+encodeURIComponent("Please add me to the waitlist: "+v);
-  m.textContent="Thanks. Your email app should open to confirm.";
+  var email=document.getElementById("e").value.trim(),btn=form.querySelector("button");
+  if(!FORM_ENDPOINT){msg.textContent="Sign-ups aren’t connected yet. Please check back soon.";return;}
+  btn.disabled=true;btn.textContent="Sending…";msg.textContent="";
+  fetch(FORM_ENDPOINT,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},
+    body:JSON.stringify({email:email,_subject:"New Reset & Recalibrate waitlist sign-up",source:"resetandrecalibrateng.com"})})
+  .then(function(r){
+    if(!r.ok)throw new Error("bad");
+    form.style.display="none";
+    msg.style.fontSize="1.25rem";msg.style.fontWeight="700";
+    msg.textContent="You’re on the list. We’ll be in touch soon.";
+  })
+  .catch(function(){
+    btn.disabled=false;btn.textContent="Join the waitlist";
+    msg.textContent="Something went wrong. Please try again, or email hello@resetandrecalibrateng.com.";
+  });
 });
 </script>
 </body>
